@@ -6,7 +6,6 @@ import com.inno.harbor.parser.DataParser;
 import com.inno.harbor.reader.DataReader;
 import com.inno.harbor.validator.DataValidator;
 import com.inno.harbor.config.HarborConfig;
-import com.inno.harbor.shiphandler.ShipHandler;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
@@ -33,7 +32,7 @@ public class Main {
         ExecutorService executor = Executors.newFixedThreadPool(ships.size());
 
         for (Ship ship : ships) {
-            executor.execute(new ShipHandler(ship));
+            executor.execute(ship);
         }
 
         executor.shutdown();

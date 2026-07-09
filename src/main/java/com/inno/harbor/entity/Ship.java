@@ -3,10 +3,14 @@ package com.inno.harbor.entity;
 import com.inno.harbor.state.ShipState;
 import com.inno.harbor.state.StateType;
 import com.inno.harbor.state.WaitingState;
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
 
 import java.util.concurrent.atomic.AtomicInteger;
 
-public class Ship {
+public class Ship implements Runnable {
+
+    private static final Logger LOGGER = LogManager.getLogger(Ship.class);
 
     private static final AtomicInteger ID_COUNTER = new AtomicInteger(1);
 
@@ -50,6 +54,16 @@ public class Ship {
 
     public void addContainers(int count)    { currentContainers += count; }
     public void removeContainers(int count) { currentContainers -= count; }
+
+    @Override
+    public void run() {
+        LOGGER.info("Ship '{}' arrived at port: {}", name, this);
+        while (!done) {
+            state.handle(this);
+        }
+        LOGGER.info("Ship '{}' fully serviced — containers on board: {}/{}",
+                name, currentContainers, capacity);
+    }
 
     @Override
     public String toString() {
